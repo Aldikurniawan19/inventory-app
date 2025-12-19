@@ -1,6 +1,4 @@
 @props(['nomor_sku'])
-
-
 <div>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-default btn-kartu-stok text-primary" data-bs-toggle="modal"

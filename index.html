@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Use Case - Distribution System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 { color: #1a202c; margin-bottom: 5px; }
+        p { color: #4a5568; margin-bottom: 20px; text-align: center; max-width: 800px; }
+
+        .diagram-container {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: auto;
+        }
+
+        svg { background-color: #fff; min-width: 1100px; }
+
+        /* --- STYLES --- */
+        
+        /* Boundary */
+        .boundary { fill: none; stroke: #2d3748; stroke-width: 2.5; }
+        .boundary-label { font-weight: bold; font-size: 16px; fill: #2d3748; text-anchor: middle; }
+
+        /* Actors */
+        .actor-head { fill: #e2e8f0; stroke: #2d3748; stroke-width: 2; }
+        .actor-body { stroke: #2d3748; stroke-width: 2; fill: none; }
+        .actor-text { font-size: 13px; font-weight: bold; fill: #1a202c; text-anchor: middle; }
+
+        /* Use Cases (System Processes) - Ellipse Lonjong (seperti referensi) */
+        .uc-sys-ellipse { 
+            fill: #edf2f7; 
+            stroke: #4a5568; 
+            stroke-width: 1.5; 
+            stroke-dasharray: 4, 2; /* Putus-putus menandakan proses sistem otomatis */
+        }
+        .uc-sys-text { font-size: 11px; fill: #4a5568; text-anchor: middle; font-style: italic; }
+
+        /* Use Cases (Actor Action) - Ellipse Solid */
+        .uc-act-ellipse { 
+            fill: #ebf8ff; 
+            stroke: #3182ce; 
+            stroke-width: 2; 
+        }
+        .uc-act-text { font-size: 11px; fill: #2c5282; text-anchor: middle; font-weight: bold; }
+
+        /* Lines */
+        .line-solid { stroke: #4a5568; stroke-width: 1.5; }
+        .line-include { stroke: #4a5568; stroke-width: 1.2; stroke-dasharray: 5, 3; }
+        .line-extend { stroke: #e53e3e; stroke-width: 1.2; stroke-dasharray: 5, 3; }
+
+        /* Stereotypes */
+        .stereo-text { font-size: 9px; fill: #4a5568; text-anchor: middle; background: white; }
+        .stereo-text-ext { font-size: 9px; fill: #e53e3e; text-anchor: middle; background: white; }
+
+        /* Legend */
+        .legend-box { fill: white; stroke: #cbd5e0; }
+
+    </style>
+</head>
+<body>
+
+    <h2>Sistem Informasi Distribusi & E-Commerce (Complex)</h2>
+    <p>Dikembangkan dari referensi PT. Nusantara. Menambahkan kompleksitas pada <b>Manajemen Gudang (Picking/Packing)</b> dan <b>Validasi Kredit (B2B)</b>.</p>
+
+    <div class="diagram-container">
+        <svg width="1100" height="1400" viewBox="0 0 1100 1400">
+            
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#4a5568" />
+                </marker>
+                <marker id="arrow-inc" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L10,3 L0,6" fill="none" stroke="#4a5568" stroke-width="1.5" />
+                </marker>
+                <marker id="arrow-ext" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L10,3 L0,6" fill="none" stroke="#e53e3e" stroke-width="1.5" />
+                </marker>
+
+                <g id="stickman">
+                    <circle cx="0" cy="-20" r="8" class="actor-head"/>
+                    <line x1="0" y1="-12" x2="0" y2="15" class="actor-body"/>
+                    <line x1="-12" y1="0" x2="12" y2="0" class="actor-body"/>
+                    <line x1="0" y1="15" x2="-10" y2="30" class="actor-body"/>
+                    <line x1="0" y1="15" x2="10" y2="30" class="actor-body"/>
+                </g>
+            </defs>
+
+            <rect x="200" y="20" width="700" height="1350" class="boundary" />
+            <text x="550" y="50" class="boundary-label">Sistem Distribusi Terintegrasi (ERP)</text>
+
+            <g transform="translate(100, 150)">
+                <use href="#stickman" />
+                <text x="0" y="50" class="actor-text">Pelanggan</text>
+                <text x="0" y="65" font-size="10" fill="#666" text-anchor="middle">(B2B / B2C)</text>
+            </g>
+
+            <g transform="translate(100, 1200)">
+                <use href="#stickman" />
+                <text x="0" y="50" class="actor-text">Manajer/CEO</text>
+            </g>
+
+            <g transform="translate(1000, 200)">
+                <use href="#stickman" />
+                <text x="0" y="50" class="actor-text">Sales Admin</text>
+            </g>
+
+            <g transform="translate(1000, 600)">
+                <use href="#stickman" />
+                <text x="0" y="50" class="actor-text">Kepala Gudang</text>
+            </g>
+
+            <g transform="translate(1000, 900)">
+                <use href="#stickman" />
+                <text x="0" y="50" class="actor-text">Kurir Ekspedisi</text>
+            </g>
+
+
+            <g transform="translate(350, 100)">
+                <ellipse cx="0" cy="0" rx="70" ry="20" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Login / Auth</text>
+            </g>
+            
+            <g transform="translate(550, 100)">
+                <ellipse cx="0" cy="0" rx="70" ry="20" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Enkripsi Token</text>
+            </g>
+
+            <g transform="translate(350, 200)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Buat Pesanan (PO)</text>
+            </g>
+
+            <g transform="translate(600, 200)">
+                <ellipse cx="0" cy="0" rx="70" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Cek Limit Kredit</text>
+                <text x="0" y="16" font-size="9" fill="#666" text-anchor="middle">(Khusus B2B)</text>
+            </g>
+
+            <g transform="translate(800, 200)">
+                <ellipse cx="0" cy="0" rx="70" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Cek Ketersediaan Stok</text>
+            </g>
+
+            <g transform="translate(800, 300)">
+                <ellipse cx="0" cy="0" rx="70" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Validasi Pesanan</text>
+            </g>
+
+            <g transform="translate(350, 350)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Proses Pembayaran</text>
+            </g>
+
+            <g transform="translate(550, 350)">
+                <ellipse cx="0" cy="0" rx="70" ry="20" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Gateway Validasi</text>
+            </g>
+
+            <g transform="translate(550, 420)">
+                <ellipse cx="0" cy="0" rx="75" ry="20" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Generate Invoice</text>
+            </g>
+
+
+            <g transform="translate(800, 500)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Generate Picking List</text>
+                <text x="0" y="15" font-size="9" fill="#666" text-anchor="middle">(Lokasi Rak)</text>
+            </g>
+
+            <g transform="translate(800, 600)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Packing Barang</text>
+            </g>
+
+            <g transform="translate(550, 600)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Potong Stok (Batch)</text>
+            </g>
+
+            <g transform="translate(550, 700)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Cetak Label Pengiriman</text>
+            </g>
+
+            <g transform="translate(800, 800)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Pickup Barang</text>
+            </g>
+
+            <g transform="translate(550, 800)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Update Status: In Transit</text>
+            </g>
+
+            <g transform="translate(350, 800)">
+                <ellipse cx="0" cy="0" rx="70" ry="20" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Tracking Live</text>
+            </g>
+
+            <g transform="translate(350, 950)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Konfirmasi Terima</text>
+            </g>
+
+            <g transform="translate(550, 950)">
+                <ellipse cx="0" cy="0" rx="70" ry="25" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Auto-Release Dana</text>
+            </g>
+
+            <g transform="translate(800, 950)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Upload Bukti Kirim</text>
+            </g>
+
+            <g transform="translate(350, 1100)">
+                <ellipse cx="0" cy="0" rx="80" ry="25" class="uc-act-ellipse" />
+                <text x="0" y="4" class="uc-act-text">Ajukan Komplain/Retur</text>
+            </g>
+             <g transform="translate(600, 1100)">
+                <ellipse cx="0" cy="0" rx="70" ry="20" class="uc-sys-ellipse" />
+                <text x="0" y="4" class="uc-sys-text">Bekukan Dana</text>
+            </g>
+
+
+            <g transform="translate(550, 1250)">
+                <ellipse cx="0" cy="0" rx="90" ry="30" class="uc-sys-ellipse" />
+                <text x="0" y="-5" class="uc-sys-text">Generate Laporan Eksekutif</text>
+                <text x="0" y="10" font-size="9" fill="#666" text-anchor="middle">(Penjualan/Stok/Logistik)</text>
+            </g>
+
+
+            <line x1="120" y1="150" x2="280" y2="100" class="line-solid" marker-end="url(#arrow)" />
+            <path d="M420,100 L480,100" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="450" y="95" class="stereo-text"><< include >></text>
+
+            <line x1="120" y1="150" x2="270" y2="200" class="line-solid" marker-end="url(#arrow)" />
+            
+            <path d="M430,200 L530,200" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="480" y="195" class="stereo-text"><< include >></text>
+
+            <path d="M670,200 L730,200" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="700" y="195" class="stereo-text"><< include >></text>
+
+            <line x1="1000" y1="200" x2="870" y2="300" class="line-solid" marker-end="url(#arrow)" />
+            <path d="M800,275 L800,225" class="line-include" marker-end="url(#arrow-inc)" /> <line x1="120" y1="150" x2="270" y2="350" class="line-solid" marker-end="url(#arrow)" />
+            <path d="M430,350 L480,350" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="455" y="345" class="stereo-text"><< include >></text>
+
+            <path d="M550,370 L550,400" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="550" y="390" class="stereo-text"><< include >></text>
+
+            <path d="M625,420 L720,500" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="690" y="460" class="stereo-text" transform="rotate(25 690,460)"><< include >></text>
+
+            <line x1="1000" y1="600" x2="880" y2="500" class="line-solid" marker-end="url(#arrow)" />
+            
+            <line x1="1000" y1="600" x2="880" y2="600" class="line-solid" marker-end="url(#arrow)" />
+
+            <path d="M720,600 L630,600" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="675" y="595" class="stereo-text"><< include >></text>
+
+            <path d="M750,620 L600,680" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="670" y="660" class="stereo-text"><< include >></text>
+
+            <line x1="1000" y1="900" x2="880" y2="800" class="line-solid" marker-end="url(#arrow)" /> <line x1="1000" y1="900" x2="880" y2="950" class="line-solid" marker-end="url(#arrow)" /> <path d="M720,800 L630,800" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="675" y="795" class="stereo-text"><< include >></text>
+
+            <path d="M420,800 L470,800" class="line-extend" marker-end="url(#arrow-ext)" />
+            <text x="445" y="790" class="stereo-text-ext"><< extend >></text>
+            <line x1="120" y1="150" x2="280" y2="800" class="line-solid" marker-end="url(#arrow)" /> <line x1="120" y1="150" x2="270" y2="950" class="line-solid" marker-end="url(#arrow)" /> <path d="M430,950 L480,950" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="455" y="945" class="stereo-text"><< include >></text>
+
+            <path d="M350,1075 L350,975" class="line-extend" marker-end="url(#arrow-ext)" />
+            <text x="350" y="1030" class="stereo-text-ext"><< extend >></text>
+            <text x="385" y="1030" font-size="9" fill="#666">(Masalah)</text>
+
+            <line x1="120" y1="150" x2="270" y2="1100" class="line-solid" marker-end="url(#arrow)" />
+            
+            <path d="M430,1100 L530,1100" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="480" y="1095" class="stereo-text"><< include >></text>
+
+            <line x1="120" y1="1200" x2="460" y2="1250" class="line-solid" marker-end="url(#arrow)" />
+
+
+            <rect x="850" y="1200" width="200" height="120" class="legend-box" />
+            <text x="950" y="1220" font-weight="bold" font-size="12" text-anchor="middle">Keterangan</text>
+            
+            <ellipse cx="880" cy="1240" rx="20" ry="10" class="uc-act-ellipse" />
+            <text x="910" y="1245" font-size="10">Aktivitas Aktor</text>
+
+            <ellipse cx="880" cy="1270" rx="20" ry="10" class="uc-sys-ellipse" />
+            <text x="910" y="1275" font-size="10">Proses Sistem</text>
+
+            <line x1="870" y1="1300" x2="900" y2="1300" class="line-include" marker-end="url(#arrow-inc)" />
+            <text x="910" y="1305" font-size="10">Include (Wajib)</text>
+
+        </svg>
+    </div>
+
+</body>
+</html>

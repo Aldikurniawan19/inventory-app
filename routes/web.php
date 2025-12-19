@@ -35,7 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::post('export-laporan-transaksi', [ExportLaporanTransaksiController::class, 'exportLaporanTransaksi'])->name('export-laporan-transaksi');
     Route::post('export-laporan-kartu-stok', [KartuStokController::class, 'exportLaporan']);
 
-
     Route::resource('laporan-kenikan-harga', LaporanKenaikanHargaController::class)->only(['index', 'update']);
 
     Route::prefix('master-data')->name('master-data.')->group(function () {
@@ -48,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('transaksi-masuk', TransaksiMasukController::class)->only(['index', 'create', 'store', 'show']);
     Route::resource('transaksi-keluar', TransaksiKeluarController::class)->only(['index', 'create', 'store', 'show']);
     Route::resource('transaksi-retur', TransaksiReturController::class)->only(['index', 'create', 'store', 'show']);
+
     Route::prefix('stok-opname')->name('stok-opname.')->group(function () {
         Route::resource('priode', PriodeStokOpnameController::class);
         Route::resource('input-data', InputStokOpnameController::class);

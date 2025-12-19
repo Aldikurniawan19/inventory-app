@@ -13,21 +13,30 @@ class FormProduk extends Component
     /**
      * Create a new component instance.
      */
-    public $id, $nama_produk, $deskripsi_produk, $kategori_produk_id,  $kategori, $action;
+    public $id;
+
+    public $nama_produk;
+
+    public $deskripsi_produk;
+
+    public $kategori_produk_id;
+
+    public $kategori;
+
+    public $action;
 
     public function __construct($id = null)
     {
         $this->kategori = KategoriProduk::all();
-        if($id){
+        if ($id) {
             $produk = Produk::findOrFail($id);
             $this->id = $produk->id;
             $this->nama_produk = $produk->nama_produk;
             $this->deskripsi_produk = $produk->deskripsi_produk;
             $this->kategori_produk_id = $produk->kategori_produk_id;
             $this->action = route('master-data.produk.update', $produk->id);
-        }else{
+        } else {
             $this->action = route('master-data.produk.store');
-
         }
     }
 

@@ -1,55 +1,348 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        padding: 20px;
+    }
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    .login-wrapper {
+        display: flex;
+        max-width: 700px;
+        width: 100%;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+    .login-left {
+        flex: 1;
+        background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        color: white;
+        position: relative;
+    }
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    .login-left h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    .login-left p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        opacity: 0.95;
+    }
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+    .login-left .hashtag {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+    .dots-pattern {
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        display: grid;
+        grid-template-columns: repeat(4, 20px);
+        gap: 6px;
+    }
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    .dot {
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+    }
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary col-9">
-                                    {{ __('Login') }}
-                                </button>
+    .login-right {
+        flex: 1;
+        padding: 40px 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    .logo-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        position: relative;
+    }
+
+    .logo-icon::before {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        background: white;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .login-right h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .login-right .subtitle {
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    .forgot-password {
+        text-align: right;
+        margin-top: 8px;
+        margin-bottom: 20px;
+    }
+
+    .forgot-password a {
+        color: #00d4ff;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 153, 255, 0.3);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background: #e0e0e0;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 12px;
+        position: relative;
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .social-login {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .social-btn {
+        width: 45px;
+        height: 45px;
+        border: 2px solid #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: white;
+    }
+
+    .social-btn:hover {
+        border-color: #00d4ff;
+        transform: translateY(-2px);
+    }
+
+    .social-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .login-wrapper {
+            flex-direction: column;
+        }
+
+        .login-left {
+            padding: 40px 30px;
+        }
+
+        .login-left h1 {
+            font-size: 2rem;
+        }
+
+        .dots-pattern {
+            display: none;
+        }
+
+        .login-right {
+            padding: 40px 30px;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-wrapper">
+        <!-- Left Side -->
+        <div class="login-left">
+            <h1>Selamat Datang</h1>
+            <p>Mulai kelola produk Anda dengan mudah dengan kontrol kualitas, real time, dan layanan terbaik dengan keamanan terjamin pada harga yang terjangkau.</p>
+            <span class="hashtag">#TetapUpdateSelalu</span>
+            
+            <div class="dots-pattern">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot" style="opacity: 0.5;"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot" style="opacity: 0.5;"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot" style="opacity: 0.5;"></div>
             </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="login-right">
+            <div class="logo-section">
+                <div class="logo-icon"></div>
+            </div>
+            
+            <h2>Masuk</h2>
+            <p class="subtitle">Belum memiliki akun? <a href="{{ route('register') }}" style="color: #00d4ff; text-decoration: none; font-weight: 600;">Daftar</a></p>
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">{{ __('Email Address') }}</label>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Username / Email">
+
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">{{ __('Password') }}</label>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Kata Sandi">
+
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="forgot-password">
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}">
+                            Lupa Kata Sandi?
+                        </a>
+                    @endif
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    MASUK
+                </button>
+
+                <div class="divider">
+                    <span>Atau masuk dengan</span>
+                </div>
+
+                <div class="social-login">
+                    <div class="social-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                    </div>
+                    <div class="social-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
+                        </svg>
+                    </div>
+                    <div class="social-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="#000000"/>
+                        </svg>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

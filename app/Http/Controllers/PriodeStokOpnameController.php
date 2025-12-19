@@ -8,7 +8,6 @@ use App\Models\ItemStokOpname;
 use App\Models\PriodeStokOpname;
 use App\Models\VarianProduk;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class PriodeStokOpnameController extends Controller
 {
@@ -22,17 +21,19 @@ class PriodeStokOpnameController extends Controller
         $dataPriode = PriodeStokOpname::orderBy('created_at', 'DESC')->get()->map(function ($q) {
             $tanggalMulai = Carbon::parse($q->tanggal_mulai)->locale('id')->translatedFormat('d M Y');
             $tanggalSelesai = Carbon::parse($q->tanggal_selesai)->locale('id')->translatedFormat('d M Y');
-            $priode = $tanggalMulai . ' s/d ' . $tanggalSelesai;
+            $priode = $tanggalMulai.' s/d '.$tanggalSelesai;
+
             return [
-                'id'                    => $q->id,
-                'priode'                => $priode,
-                'is_active'             => $q->is_active,
-                'is_completed'          => $q->is_completed,
-                'jumlah_barang'         => $q->jumlah_barang,
-                'jumlah_barang_sesuai'  => ItemStokOpname::jumlahDilaporkan($q->id, 'sesuai'),
+                'id' => $q->id,
+                'priode' => $priode,
+                'is_active' => $q->is_active,
+                'is_completed' => $q->is_completed,
+                'jumlah_barang' => $q->jumlah_barang,
+                'jumlah_barang_sesuai' => ItemStokOpname::jumlahDilaporkan($q->id, 'sesuai'),
                 'jumlah_barang_selisih' => ItemStokOpname::jumlahDilaporkan($q->id, 'selisih'),
             ];
         });
+
         return view('stok-opname-priode.index', compact('pageTitle', 'dataPriode'));
     }
 
@@ -59,6 +60,7 @@ class PriodeStokOpnameController extends Controller
             ->update(['is_active' => false]);
 
         toast()->success('Berhasil menambahkan priode stok opname');
+
         return redirect()->route('stok-opname.priode.index');
     }
 
@@ -78,6 +80,7 @@ class PriodeStokOpnameController extends Controller
                 ->update(['is_active' => false]);
         }
         toast()->success('Priode stok opname Berhasil diubah ');
+
         return redirect()->route('stok-opname.priode.index');
     }
 
@@ -87,11 +90,13 @@ class PriodeStokOpnameController extends Controller
 
         if ($priode->is_active) {
             toast()->error('Tidak bisa menghapus priode stok opname yang sedang aktif');
+
             return redirect()->route('stok-opname.priode.index');
         }
 
         $priode->delete();
         toast()->success('priode stok opname berhasil dihapus ');
+
         return redirect()->route('stok-opname.priode.index');
     }
 
@@ -101,15 +106,16 @@ class PriodeStokOpnameController extends Controller
         $dataPriode = PriodeStokOpname::findOrFail($priode);
         $tanggalMulai = Carbon::parse($dataPriode->tanggal_mulai)->locale('id')->translatedFormat('d M Y');
         $tanggalSelesai = Carbon::parse($dataPriode->tanggal_selesai)->locale('id')->translatedFormat('d M Y');
-        $priode = $tanggalMulai . ' s/d ' . $tanggalSelesai;
-        $dataPriode['priode'] = $priode;
+        $priode = $tanggalMulai.' s/d '.$tanggalSelesai;
+        $dataPriode->priode = $priode;
 
-        $dataPriode['jumlah_barang_sesuai'] = ItemStokOpname::jumlahDilaporkan($dataPriode->id, 'sesuai');
-        $dataPriode['jumlah_barang_selisih'] = ItemStokOpname::jumlahDilaporkan($dataPriode->id, 'selisih');
-        $dataPriode['items'] = $dataPriode->items->map(function ($q) {
-            $q->setAttribute('produk', $q->varian->produk->nama_produk . ' ' . $q->varian->nama_varian);
+        $dataPriode->jumlah_barang_sesuai = ItemStokOpname::jumlahDilaporkan($dataPriode->id, 'sesuai');
+        $dataPriode->jumlah_barang_selisih = ItemStokOpname::jumlahDilaporkan($dataPriode->id, 'selisih');
+        $dataPriode->setRelation('items', $dataPriode->items->map(function ($q) {
+            $q->setAttribute('produk', $q->varian->produk->nama_produk.' '.$q->varian->nama_varian);
+
             return $q;
-        });
+        }));
 
         return view('stok-opname.priode.show', compact('pageTitle', 'dataPriode'));
     }

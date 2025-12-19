@@ -8,7 +8,6 @@ use App\Http\Requests\ExportLaporanTransaksiRequest;
 use App\Models\Transaksi;
 use App\Models\TransaksiItems;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExportLaporanTransaksiController extends Controller
@@ -23,10 +22,8 @@ class ExportLaporanTransaksiController extends Controller
         $is_completed = $request->is_completed;
 
         if ($is_completed) {
-            // Logic to generate and download a completed report
             return $this->downloadFullReport($jenisTransaksi, $pengirim, $penerima, $tanggalAwal, $tanggalAkhir);
         } else {
-            // Logic to generate and download an uncompleted report
             return $this->downloadBasicReport($jenisTransaksi, $pengirim, $penerima, $tanggalAwal, $tanggalAkhir);
         }
     }
@@ -37,10 +34,10 @@ class ExportLaporanTransaksiController extends Controller
         $query->where('jenis_transaksi', $jenisTransaksi);
 
         if ($jenisTransaksi == 'pemasukan' && $pengirim) {
-            $query->where('pengirim', 'like', '% ' . $pengirim . '%');
+            $query->where('pengirim', 'like', '% '.$pengirim.'%');
         }
         if ($jenisTransaksi == 'pengeluaran' && $penerima) {
-            $query->where('penerima', 'like', '% ' . $penerima . '%');
+            $query->where('penerima', 'like', '% '.$penerima.'%');
         }
 
         if ($tanggalAwal && $tanggalAkhir) {
@@ -50,7 +47,8 @@ class ExportLaporanTransaksiController extends Controller
         }
 
         $transaksi = $query->get();
-        return Excel::download(new ExportBasicLaporanTransaksi($transaksi, $jenisTransaksi, $tanggalAwal, $tanggalAkhir), 'LAPORAN TRANSAKSI' . strtoupper($jenisTransaksi) . '.xlsx');
+
+        return Excel::download(new ExportBasicLaporanTransaksi($transaksi, $jenisTransaksi, $tanggalAwal, $tanggalAkhir), 'LAPORAN TRANSAKSI'.strtoupper($jenisTransaksi).'.xlsx');
     }
 
     public function downloadFullReport($jenisTransaksi, $pengirim, $penerima, $tanggalAwal, $tanggalAkhir)
@@ -60,10 +58,10 @@ class ExportLaporanTransaksiController extends Controller
             $q->where('jenis_transaksi', $jenisTransaksi);
 
             if ($pengirim && $jenisTransaksi == 'pemasukan') {
-                $q->where('pengirim', 'like', '% ' . $pengirim . '%');
+                $q->where('pengirim', 'like', '% '.$pengirim.'%');
             }
             if ($penerima && $jenisTransaksi == 'pengeluaran') {
-                $q->where('penerima', 'like', '% ' . $penerima . '%');
+                $q->where('penerima', 'like', '% '.$penerima.'%');
             }
 
             if ($tanggalAwal && $tanggalAkhir) {
@@ -73,6 +71,7 @@ class ExportLaporanTransaksiController extends Controller
             }
         });
         $transaksi = $query->get();
-        return Excel::download(new ExportCompletedLaporanTransaksi($transaksi, $jenisTransaksi, $tanggalAwal, $tanggalAkhir), 'LAPORAN TRANSAKSI' . strtoupper($jenisTransaksi) . '.xlsx');
+
+        return Excel::download(new ExportCompletedLaporanTransaksi($transaksi, $jenisTransaksi, $tanggalAwal, $tanggalAkhir), 'LAPORAN TRANSAKSI'.strtoupper($jenisTransaksi).'.xlsx');
     }
 }
